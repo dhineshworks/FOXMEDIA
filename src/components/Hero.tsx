@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, MessageCircle, ShieldCheck, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowDown, MessageCircle, ShieldCheck, Zap, CheckCircle2 } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 import type { Settings } from '../types';
 
@@ -20,8 +20,8 @@ export const Hero: React.FC<HeroProps> = ({ settings }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Trust badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-xs font-medium mb-8 backdrop-blur-sm animate-fade-in">
-          <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-xs font-medium mb-8 backdrop-blur-sm animate-fade-in shadow-lg shadow-orange-500/10">
+          <img src="/logo.png" alt="FOXMEDIA" className="w-5 h-5 rounded-full object-cover" />
           <span>Official Digital Subscriptions & Instant Redemption</span>
         </div>
 

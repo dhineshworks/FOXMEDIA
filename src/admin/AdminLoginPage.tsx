@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sparkles, Lock, Mail, Loader2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Lock, Mail, Loader2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { isSupabaseConfigured } from '../lib/supabase';
 
@@ -50,9 +50,9 @@ export const AdminLoginPage: React.FC = () => {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
-            <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-950/40 group-hover:scale-105 transition">
-              <Sparkles className="w-5 h-5" />
+          <Link to="/" className="inline-flex items-center justify-center mb-4 group">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-xl shadow-orange-500/20 group-hover:scale-105 transition-transform duration-200">
+              <img src="/logo.png" alt="FOXMEDIA" className="w-full h-full object-cover" />
             </div>
           </Link>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Admin Portal Sign In</h1>

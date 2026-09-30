@@ -9,7 +9,6 @@ import {
   LogOut, 
   Menu, 
   X, 
-  Sparkles, 
   ExternalLink,
   ShieldCheck,
   Database
@@ -41,8 +40,8 @@ export const AdminLayout: React.FC = () => {
       {/* Mobile Header */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900/90 backdrop-blur sticky top-0 z-30">
         <Link to="/admin/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white">
-            <Sparkles className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-orange-500/20">
+            <img src="/logo.png" alt="FOXMEDIA" className="w-full h-full object-cover" />
           </div>
           <span className="font-bold text-white tracking-tight">Admin Portal</span>
         </Link>
@@ -66,8 +65,8 @@ export const AdminLayout: React.FC = () => {
           <div className="p-6 border-b border-zinc-800/80">
             <div className="flex items-center justify-between">
               <Link to="/admin/dashboard" className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-950/40">
-                  <Sparkles className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md shadow-orange-500/20">
+                  <img src="/logo.png" alt="FOXMEDIA" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h1 className="font-bold text-base text-white tracking-tight leading-none">

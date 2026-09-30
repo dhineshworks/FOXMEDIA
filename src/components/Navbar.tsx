@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sparkles, MessageCircle, Menu, X, KeyRound } from 'lucide-react';
+import { MessageCircle, Menu, X, KeyRound } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 import type { Settings } from '../types';
 
@@ -23,10 +23,12 @@ export const Navbar: React.FC<NavbarProps> = ({ settings }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 via-orange-500 to-amber-400 p-[1.5px] transition-transform group-hover:scale-105">
-            <div className="w-full h-full bg-zinc-950 rounded-[10px] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-orange-400" />
-            </div>
+          <div className="relative w-9 h-9 rounded-xl overflow-hidden transition-transform group-hover:scale-105 shadow-md shadow-orange-500/20">
+            <img 
+              src="/logo.png" 
+              alt="FOXMEDIA" 
+              className="w-full h-full object-cover" 
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg tracking-tight text-white flex items-center gap-1.5">

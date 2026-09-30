@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, MessageCircle, Clock, ShieldCheck } from 'lucide-react';
+import { MessageCircle, Clock, ShieldCheck } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 import type { Settings } from '../types';
 
@@ -20,9 +20,13 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white">
-                <Sparkles className="w-4 h-4" />
+            <Link to="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-orange-500/20">
+                <img 
+                  src="/logo.png" 
+                  alt="FOXMEDIA" 
+                  className="w-full h-full object-cover" 
+                />
               </div>
               <span className="font-bold text-lg text-white tracking-tight">
                 {settings.business_name || 'FOXMEDIA'}
