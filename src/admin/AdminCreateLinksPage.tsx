@@ -25,7 +25,8 @@ export const AdminCreateLinksPage: React.FC = () => {
 
   // Form states
   const [selectedProductId, setSelectedProductId] = useState('');
-  const [prefix, setPrefix] = useState('SEP30');
+  const [prefix, setPrefix] = useState('Foxmedia');
+  const [targetUrl, setTargetUrl] = useState('https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia');
   const [expiration, setExpiration] = useState('none');
   const [usageType, setUsageType] = useState<UsageType>('SINGLE');
   const [maxUses, setMaxUses] = useState(1);
@@ -40,7 +41,7 @@ export const AdminCreateLinksPage: React.FC = () => {
   const [copiedSuccess, setCopiedSuccess] = useState(false);
 
   useEffect(() => {
-    async function loadProducts() {
+    async function loadData() {
       try {
         const prods = await productService.getAllProducts();
         setProducts(prods);
@@ -53,8 +54,9 @@ export const AdminCreateLinksPage: React.FC = () => {
         setLoading(false);
       }
     }
-    loadProducts();
+    loadData();
   }, []);
+
 
   const handleQuantitySelect = (q: number) => {
     setQuantity(q);
@@ -76,12 +78,14 @@ export const AdminCreateLinksPage: React.FC = () => {
     try {
       const res = await adminService.createLinks({
         productId: selectedProductId,
-        prefix: prefix.trim() || 'customer',
+        prefix: prefix.trim() || 'Foxmedia',
+        targetUrl: targetUrl.trim(),
         expiration,
         usageType,
         maxUses: usageType === 'MULTIPLE' ? maxUses : 1,
         quantity,
       });
+
 
       if (res.success) {
         const prod = products.find(p => p.id === selectedProductId);
@@ -255,20 +259,47 @@ export const AdminCreateLinksPage: React.FC = () => {
           {/* Custom Name / Prefix */}
           <div>
             <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-              Custom Name / Batch Prefix *
+              Customer Name / Link Alias *
             </label>
             <input
               type="text"
               required
               value={prefix}
               onChange={(e) => setPrefix(e.target.value)}
-              placeholder="e.g. SEP30, customer, john, batch-001"
+              placeholder="e.g. Foxmedia, john, SEP30, client-001"
               className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-700 text-white text-sm focus:outline-none focus:border-orange-500 font-mono"
             />
+            <div className="mt-2 p-2.5 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400 flex items-center justify-between">
+              <span>Public Link Preview:</span>
+              <span className="font-mono text-orange-400 font-medium">
+                {window.location.origin}/l/{prefix || 'Foxmedia'}
+              </span>
+            </div>
+          </div>
+
+          {/* Master Cloaked Target URL */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                Secret Adobe Redirect URL (Cloaked) *
+              </label>
+              <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                Hidden until user redeems
+              </span>
+            </div>
+            <input
+              type="url"
+              required
+              value={targetUrl}
+              onChange={(e) => setTargetUrl(e.target.value)}
+              placeholder="https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia"
+              className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-700 text-white text-sm focus:outline-none focus:border-orange-500 font-mono text-xs"
+            />
             <p className="text-[11px] text-zinc-400 mt-1.5">
-              For bulk generation, sequential numbers will be appended (e.g. <span className="font-mono text-zinc-300">{prefix || 'link'}-001</span> to <span className="font-mono text-zinc-300">{prefix || 'link'}-{String(quantity).padStart(3, '0')}</span>).
+              The customer will <strong>NEVER</strong> see this destination link until they click "Redeem Now". Once redeemed, they are seamlessly redirected here.
             </p>
           </div>
+
 
           {/* Quantity Preset & Custom Input */}
           <div>

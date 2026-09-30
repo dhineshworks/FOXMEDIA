@@ -20,6 +20,7 @@ export interface RedemptionLink {
   product_id: string;
   custom_name: string;
   token: string;
+  target_url?: string | null;
   usage_type: UsageType;
   max_uses: number;
   current_uses: number;
@@ -48,6 +49,7 @@ export interface Settings {
   whatsapp_number: string;
   support_hours: string;
   website_url: string;
+  adobe_target_url?: string;
   updated_at?: string;
 }
 
@@ -79,6 +81,7 @@ export interface RedeemResponse {
   status: LinkStatus | 'SUCCESS' | 'INVALID';
   message?: string;
   error?: string;
+  target_url?: string;
   product_name?: string;
   duration?: string;
   redeemed_at?: string;
@@ -88,8 +91,10 @@ export interface RedeemResponse {
 export interface CreateLinkParams {
   productId: string;
   prefix: string;
+  targetUrl?: string;
   expiration: string; // 'none' | '1h' | '6h' | '12h' | '1d' | '3d' | '7d' | custom ISO string
   usageType: UsageType;
   maxUses?: number;
   quantity: number;
 }
+

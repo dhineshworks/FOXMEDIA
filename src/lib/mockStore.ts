@@ -55,8 +55,10 @@ const DEFAULT_SETTINGS: Settings = {
   business_name: 'FOXMEDIA',
   whatsapp_number: '9865488886',
   support_hours: '10:30 AM – 8:30 PM',
-  website_url: window.location.origin
+  website_url: window.location.origin,
+  adobe_target_url: 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia'
 };
+
 
 const INITIAL_DEMO_LINKS: RedemptionLink[] = [
   {
@@ -196,7 +198,8 @@ class MockStore {
     }
     
     const links = this.getLinks();
-    const link = links.find(l => l.token === token.trim());
+    const clean = token.trim();
+    const link = links.find(l => l.token === clean || l.custom_name.toLowerCase() === clean.toLowerCase());
     if (!link) {
       return { valid: false, status: 'INVALID', error: 'Invalid Redemption Link' };
     }
@@ -271,12 +274,14 @@ class MockStore {
     }
 
     const links = this.getLinks();
-    const link = links.find(l => l.token === token.trim());
+    const clean = token.trim();
+    const link = links.find(l => l.token === clean || l.custom_name.toLowerCase() === clean.toLowerCase());
     if (!link) {
       return { success: false, status: 'INVALID', error: 'Invalid Redemption Link' };
     }
 
     const product = this.getProducts().find(p => p.id === link.product_id);
+    const settings = this.getSettings();
     const nowIso = new Date().toISOString();
     const newUses = link.current_uses + 1;
     let newStatus: RedemptionLink['status'] = 'ACTIVE';
@@ -305,16 +310,20 @@ class MockStore {
     });
     this.setStorage(STORAGE_KEYS.REDEMPTIONS, redemptions);
 
+    const targetUrl = link.target_url || settings.adobe_target_url || 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia';
+
     return {
       success: true,
       status: 'SUCCESS',
       message: 'Redemption Successful',
+      target_url: targetUrl,
       product_name: product?.name || 'Adobe Pro Plus',
       duration: product?.duration || '4 Month',
       redeemed_at: nowIso,
       redemption_number: newUses,
     };
   }
+
 
   getRedemptions(): RedemptionRecord[] {
     return this.getStorage<RedemptionRecord[]>(STORAGE_KEYS.REDEMPTIONS, []);

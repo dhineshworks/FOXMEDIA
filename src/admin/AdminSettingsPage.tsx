@@ -176,6 +176,30 @@ export const AdminSettingsPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Master Adobe Secret Target Link */}
+        <div className="text-xs pt-2">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="font-semibold text-zinc-200">
+              Master Adobe Secret Redirect URL (Cloaked)
+            </label>
+            <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              Only revealed upon customer redemption
+            </span>
+          </div>
+          <input
+            type="url"
+            required
+            value={settings.adobe_target_url || 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia'}
+            onChange={(e) => setSettings({ ...settings, adobe_target_url: e.target.value })}
+            placeholder="https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-700 text-white font-mono text-xs focus:outline-none focus:border-orange-500"
+          />
+          <p className="text-[11px] text-zinc-400 mt-1">
+            Default destination link where customers are redirected after clicking "Redeem Now". Customers never see this URL on custom links beforehand.
+          </p>
+        </div>
+
+
         <div className="pt-4 border-t border-zinc-800 flex justify-end">
           <button
             type="submit"

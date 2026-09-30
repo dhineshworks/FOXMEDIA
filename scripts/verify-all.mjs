@@ -77,13 +77,20 @@ const validCheck = mockStore.validateToken(testToken);
 assert(validCheck.valid === true, 'Token should be valid');
 assert.strictEqual(validCheck.status, 'ACTIVE');
 
+// Test lookup by custom_name as well!
+const customNameCheck = mockStore.validateToken('test-single');
+assert(customNameCheck.valid === true, 'Lookup by customer name must be valid');
+assert.strictEqual(customNameCheck.custom_name, 'test-single');
+
 const redeem1 = mockStore.redeemToken(testToken);
 assert(redeem1.success === true, 'First redemption should succeed');
 assert.strictEqual(redeem1.status, 'SUCCESS');
+assert(redeem1.target_url && redeem1.target_url.includes('dhineshworks.github.io'), 'Target redirect URL must be returned on redemption');
 
 const redeem2 = mockStore.redeemToken(testToken);
 assert(redeem2.success === false, 'Second redemption on single-use link must fail');
 assert.strictEqual(redeem2.status, 'USED');
+
 
 // Test multi-use link limit
 const multiToken = 'r_testAtomicMulti';

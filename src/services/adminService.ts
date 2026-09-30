@@ -34,7 +34,7 @@ export const adminService = {
   },
 
   async createLinks(params: CreateLinkParams): Promise<{ success: boolean; createdCount: number; error?: string }> {
-    const { productId, prefix, expiration, usageType, maxUses = 1, quantity } = params;
+    const { productId, prefix, targetUrl, expiration, usageType, maxUses = 1, quantity } = params;
     const expiresAt = calculateExpirationDate(expiration);
     const tokens = generateBulkTokens(quantity);
 
@@ -44,6 +44,7 @@ export const adminService = {
         product_id: productId,
         custom_name: customName,
         token: token,
+        target_url: targetUrl?.trim() || null,
         usage_type: usageType,
         max_uses: usageType === 'SINGLE' ? 1 : maxUses,
         current_uses: 0,
@@ -53,6 +54,7 @@ export const adminService = {
         used_at: null,
       };
     });
+
 
     if (!isSupabaseConfigured()) {
       const newLinks: RedemptionLink[] = linksToInsert.map((item, i) => ({

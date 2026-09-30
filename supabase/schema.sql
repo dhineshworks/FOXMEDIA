@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.redemption_links (
     product_id UUID NOT NULL REFERENCES public.products(id) ON DELETE RESTRICT,
     custom_name TEXT NOT NULL,
     token TEXT UNIQUE NOT NULL,
+    target_url TEXT NULL,
     usage_type TEXT NOT NULL DEFAULT 'SINGLE' CHECK (usage_type IN ('SINGLE', 'MULTIPLE')),
     max_uses INTEGER NOT NULL DEFAULT 1 CHECK (max_uses >= 1),
     current_uses INTEGER NOT NULL DEFAULT 0 CHECK (current_uses >= 0),
@@ -67,8 +68,10 @@ CREATE TABLE IF NOT EXISTS public.settings (
     whatsapp_number TEXT NOT NULL DEFAULT '9865488886',
     support_hours TEXT NOT NULL DEFAULT '10:30 AM – 8:30 PM',
     website_url TEXT NOT NULL DEFAULT 'https://foxmedia.in',
+    adobe_target_url TEXT NOT NULL DEFAULT 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia',
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
+
 
 -- ============================================================
 -- 3. INDEXES FOR HIGH PERFORMANCE & FAST LOOKUPS
@@ -198,14 +201,15 @@ BEGIN
         );
     END IF;
 
-    -- Lookup link
+    -- Lookup link by token OR custom customer name (case-insensitive)
     SELECT l.*, p.name AS product_name, p.slug AS product_slug, 
            p.duration AS product_duration, p.description AS product_description,
            p.features AS product_features
     INTO v_link
     FROM public.redemption_links l
     JOIN public.products p ON l.product_id = p.id
-    WHERE l.token = trim(p_token);
+    WHERE l.token = trim(p_token) OR lower(l.custom_name) = lower(trim(p_token))
+    LIMIT 1;
 
     IF NOT FOUND THEN
         RETURN jsonb_build_object(
@@ -266,7 +270,7 @@ BEGIN
         );
     END IF;
 
-    -- Link is active and valid!
+    -- Link is active and valid! (Notice: target_url is strictly kept secret until redemption!)
     RETURN jsonb_build_object(
         'valid', true,
         'status', 'ACTIVE',
@@ -286,7 +290,7 @@ $$;
 GRANT EXECUTE ON FUNCTION public.validate_redemption_token(TEXT) TO anon, authenticated;
 
 
--- 5.2 REDEEM REDEMPTION TOKEN (Atomic, race-condition protected)
+-- 5.2 REDEEM REDEMPTION TOKEN (Atomic, race-condition protected, returns cloaked destination URL)
 CREATE OR REPLACE FUNCTION public.redeem_redemption_token(p_token TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -295,9 +299,9 @@ SET search_path = public
 AS $$
 DECLARE
     v_link RECORD;
-    v_product RECORD;
     v_new_uses INTEGER;
     v_new_status TEXT;
+    v_target_url TEXT;
     v_now TIMESTAMPTZ := timezone('utc'::text, now());
 BEGIN
     IF p_token IS NULL OR trim(p_token) = '' THEN
@@ -313,7 +317,7 @@ BEGIN
     INTO v_link
     FROM public.redemption_links l
     JOIN public.products p ON l.product_id = p.id
-    WHERE l.token = trim(p_token)
+    WHERE l.token = trim(p_token) OR lower(l.custom_name) = lower(trim(p_token))
     FOR UPDATE OF l;
 
     IF NOT FOUND THEN
@@ -396,10 +400,22 @@ BEGIN
         v_now
     );
 
+    -- 8. Resolve secret cloaked target URL
+    SELECT COALESCE(v_link.target_url, s.adobe_target_url, 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia')
+    INTO v_target_url
+    FROM public.settings s
+    WHERE s.id = 'general'
+    LIMIT 1;
+
+    IF v_target_url IS NULL OR trim(v_target_url) = '' THEN
+        v_target_url := 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia';
+    END IF;
+
     RETURN jsonb_build_object(
         'success', true,
         'status', 'SUCCESS',
         'message', 'Redemption Successful',
+        'target_url', v_target_url,
         'product_name', v_link.product_name,
         'duration', v_link.product_duration,
         'redeemed_at', v_now,
@@ -410,6 +426,7 @@ $$;
 
 -- Grant execute on redeem_redemption_token to public
 GRANT EXECUTE ON FUNCTION public.redeem_redemption_token(TEXT) TO anon, authenticated;
+
 
 
 -- ============================================================

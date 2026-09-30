@@ -36,8 +36,11 @@ export function App() {
           <Route index element={<HomePage settings={settings} />} />
           <Route path="redeem" element={<RedeemPage />} />
           <Route path="redeem/:token" element={<RedeemPage />} />
+          <Route path="l" element={<RedeemPage />} />
+          <Route path="l/:token" element={<RedeemPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
+
 
         {/* Admin Login */}
         <Route path="/admin/login" element={<AdminLoginPage />} />

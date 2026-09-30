@@ -40,8 +40,10 @@ export const settingsService = {
           whatsapp_number: settings.whatsapp_number,
           support_hours: settings.support_hours,
           website_url: settings.website_url,
+          adobe_target_url: settings.adobe_target_url || 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia',
           updated_at: new Date().toISOString()
         });
+
 
       if (error) throw error;
       return { success: true };

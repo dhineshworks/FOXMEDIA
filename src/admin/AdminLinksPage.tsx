@@ -60,7 +60,8 @@ export const AdminLinksPage: React.FC = () => {
   }, [links, searchQuery, statusFilter]);
 
   const handleCopyLink = (link: RedemptionLink) => {
-    const url = `${window.location.origin}/redeem/${link.token}`;
+    const slug = link.custom_name ? encodeURIComponent(link.custom_name) : link.token;
+    const url = `${window.location.origin}/l/${slug}`;
     navigator.clipboard.writeText(url);
     setCopiedId(link.id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -69,12 +70,16 @@ export const AdminLinksPage: React.FC = () => {
   const handleCopyAllLinks = () => {
     if (filteredLinks.length === 0) return;
     const text = filteredLinks
-      .map(l => `${l.custom_name}: ${window.location.origin}/redeem/${l.token} [${l.status}]`)
+      .map(l => {
+        const slug = l.custom_name ? encodeURIComponent(l.custom_name) : l.token;
+        return `${l.custom_name}: ${window.location.origin}/l/${slug} [${l.status}]`;
+      })
       .join('\n');
     navigator.clipboard.writeText(text);
     setCopiedAll(true);
     setTimeout(() => setCopiedAll(false), 2500);
   };
+
 
   const handleExportCSV = () => {
     exportLinksToCSV(filteredLinks, window.location.origin);
