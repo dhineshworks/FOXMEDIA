@@ -67,17 +67,39 @@ export const adminService = {
 
     try {
       // Direct insert via authenticated Supabase client (enforced by RLS for admin)
-      const { error } = await supabase
+      let { error } = await supabase
         .from('redemption_links')
         .insert(linksToInsert);
 
-      if (error) throw error;
+      // If target_url column hasn't been added to the table yet, retry without it!
+      if (error && error.message?.includes("target_url")) {
+        console.warn("target_url column not found on Supabase table, retrying with default schema...");
+        const linksWithoutTargetUrl = linksToInsert.map(({ target_url: _, ...rest }) => rest);
+        const retryResult = await supabase
+          .from('redemption_links')
+          .insert(linksWithoutTargetUrl);
+        error = retryResult.error;
+      }
+
+      if (error) {
+        console.error('Supabase createLinks error:', error);
+        if (error.code === '42501') {
+          return {
+            success: false,
+            createdCount: 0,
+            error: 'Permission Denied: Please log in to your admin account (or execute the SQL admin permissions query).'
+          };
+        }
+        return { success: false, createdCount: 0, error: error.message || 'Failed to create links' };
+      }
+
       return { success: true, createdCount: quantity };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to create links';
       return { success: false, createdCount: 0, error: message };
     }
   },
+
 
   async updateLinkStatus(id: string, status: RedemptionLink['status']): Promise<{ success: boolean; error?: string }> {
     if (!isSupabaseConfigured()) {
