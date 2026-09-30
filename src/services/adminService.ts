@@ -38,12 +38,15 @@ export const adminService = {
     const expiresAt = calculateExpirationDate(expiration);
     const tokens = generateBulkTokens(quantity);
 
-    const linksToInsert = tokens.map((token, index) => {
+    const linksToInsert = tokens.map((randToken, index) => {
       const customName = formatSequentialName(prefix, index + 1, quantity);
+      // For single links or custom aliases, token matches customName so both lookup methods succeed
+      const linkToken = quantity === 1 ? (prefix.trim() || randToken) : customName;
+
       return {
         product_id: productId,
         custom_name: customName,
-        token: token,
+        token: linkToken,
         target_url: targetUrl?.trim() || null,
         usage_type: usageType,
         max_uses: usageType === 'SINGLE' ? 1 : maxUses,

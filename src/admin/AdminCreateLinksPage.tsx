@@ -45,8 +45,12 @@ export const AdminCreateLinksPage: React.FC = () => {
     async function loadData() {
       try {
         const prods = await productService.getAllProducts();
-        setProducts(prods);
-        if (prods.length > 0) {
+        // Redemption links are exclusively for Adobe (Canva is sold via WhatsApp direct)
+        const adobeProds = prods.filter(p => p.name.toLowerCase().includes('adobe') || p.slug.toLowerCase().includes('adobe'));
+        setProducts(adobeProds.length > 0 ? adobeProds : prods);
+        if (adobeProds.length > 0) {
+          setSelectedProductId(adobeProds[0].id);
+        } else if (prods.length > 0) {
           setSelectedProductId(prods[0].id);
         }
       } catch (e) {
@@ -230,9 +234,14 @@ export const AdminCreateLinksPage: React.FC = () => {
 
           {/* Product Selection */}
           <div>
-            <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-              Select Product Plan *
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                Select Adobe Subscription *
+              </label>
+              <span className="text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20 font-medium">
+                Adobe Exclusive (Single-Use Checkout)
+              </span>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.map(p => {
                 const isSelected = selectedProductId === p.id;
@@ -255,6 +264,9 @@ export const AdminCreateLinksPage: React.FC = () => {
                 );
               })}
             </div>
+            <p className="text-[11px] text-zinc-500 mt-2">
+              Note: Canva plans do not require redemption links and are delivered directly.
+            </p>
           </div>
 
           {/* Custom Name / Prefix */}
