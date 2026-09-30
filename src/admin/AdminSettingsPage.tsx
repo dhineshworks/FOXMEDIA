@@ -189,10 +189,11 @@ export const AdminSettingsPage: React.FC = () => {
           <input
             type="url"
             required
-            value={settings.adobe_target_url || 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia'}
+            value={settings.adobe_target_url || 'https://commerce.adobe.com/store/checkout?items%5B0%5D%5Bid%5D=660F1BCF287345C0D465E4FF9D4A2AF6&cli=ace&co=IN&ref-order-id=D646F17C1FD5517747959836178529&utm_medium=Email&utm_campaign=GMI%20%3A%20CLCM%20Abandon_Cart_Reminder_WWEN&correlationId=f54aa9ff-26f3-4464-8c2b-559fb9568d94-0&utm_source=chatgpt.com&fbclid=PAT01DUAR_QldleHRuA2FlbQIxMABzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafvyE2y81w17BrCeJDgtzbfqzIhhxcpXQ9CqDbHe4mmKzrRqiPDPsv67OsfLw_aem_CyIp_6AI-ZvhgP8Ek2o2hQ&ss=checkout'}
             onChange={(e) => setSettings({ ...settings, adobe_target_url: e.target.value })}
-            placeholder="https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia"
+            placeholder="https://commerce.adobe.com/store/checkout?..."
             className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-700 text-white font-mono text-xs focus:outline-none focus:border-orange-500"
+
           />
           <p className="text-[11px] text-zinc-400 mt-1">
             Default destination link where customers are redirected after clicking "Redeem Now". Customers never see this URL on custom links beforehand.

@@ -85,7 +85,8 @@ assert.strictEqual(customNameCheck.custom_name, 'test-single');
 const redeem1 = mockStore.redeemToken(testToken);
 assert(redeem1.success === true, 'First redemption should succeed');
 assert.strictEqual(redeem1.status, 'SUCCESS');
-assert(redeem1.target_url && redeem1.target_url.includes('dhineshworks.github.io'), 'Target redirect URL must be returned on redemption');
+assert(redeem1.target_url && redeem1.target_url.includes('commerce.adobe.com'), 'Target redirect URL must be returned on redemption');
+
 
 const redeem2 = mockStore.redeemToken(testToken);
 assert(redeem2.success === false, 'Second redemption on single-use link must fail');

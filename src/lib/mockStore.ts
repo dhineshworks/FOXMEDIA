@@ -56,8 +56,9 @@ const DEFAULT_SETTINGS: Settings = {
   whatsapp_number: '9865488886',
   support_hours: '10:30 AM – 8:30 PM',
   website_url: window.location.origin,
-  adobe_target_url: 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia'
+  adobe_target_url: 'https://commerce.adobe.com/store/checkout?items%5B0%5D%5Bid%5D=660F1BCF287345C0D465E4FF9D4A2AF6&cli=ace&co=IN&ref-order-id=D646F17C1FD5517747959836178529&utm_medium=Email&utm_campaign=GMI%20%3A%20CLCM%20Abandon_Cart_Reminder_WWEN&correlationId=f54aa9ff-26f3-4464-8c2b-559fb9568d94-0&utm_source=chatgpt.com&fbclid=PAT01DUAR_QldleHRuA2FlbQIxMABzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafvyE2y81w17BrCeJDgtzbfqzIhhxcpXQ9CqDbHe4mmKzrRqiPDPsv67OsfLw_aem_CyIp_6AI-ZvhgP8Ek2o2hQ&ss=checkout'
 };
+
 
 
 const INITIAL_DEMO_LINKS: RedemptionLink[] = [
@@ -310,7 +311,7 @@ class MockStore {
     });
     this.setStorage(STORAGE_KEYS.REDEMPTIONS, redemptions);
 
-    const targetUrl = link.target_url || settings.adobe_target_url || 'https://dhineshworks.github.io/softsync-shop/l/?id=Foxmedia';
+    const targetUrl = link.target_url || settings.adobe_target_url || 'https://commerce.adobe.com/store/checkout?items%5B0%5D%5Bid%5D=660F1BCF287345C0D465E4FF9D4A2AF6&cli=ace&co=IN&ref-order-id=D646F17C1FD5517747959836178529&utm_medium=Email&utm_campaign=GMI%20%3A%20CLCM%20Abandon_Cart_Reminder_WWEN&correlationId=f54aa9ff-26f3-4464-8c2b-559fb9568d94-0&utm_source=chatgpt.com&fbclid=PAT01DUAR_QldleHRuA2FlbQIxMABzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafvyE2y81w17BrCeJDgtzbfqzIhhxcpXQ9CqDbHe4mmKzrRqiPDPsv67OsfLw_aem_CyIp_6AI-ZvhgP8Ek2o2hQ&ss=checkout';
 
     return {
       success: true,
