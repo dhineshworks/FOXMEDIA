@@ -76,5 +76,36 @@ export const productService = {
       const message = err instanceof Error ? err.message : 'Failed to update product';
       return { success: false, error: message };
     }
+  },
+
+  async createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<{ success: boolean; data?: Product; error?: string }> {
+    if (!isSupabaseConfigured()) {
+      const newProduct: Product = {
+        ...product,
+        id: crypto.randomUUID(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      mockStore.saveProduct(newProduct);
+      return { success: true, data: newProduct };
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([{
+          ...product,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return { success: true, data: data as Product };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create product';
+      return { success: false, error: message };
+    }
   }
 };

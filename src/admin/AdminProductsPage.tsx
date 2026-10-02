@@ -43,20 +43,49 @@ export const AdminProductsPage: React.FC = () => {
     setSaveMessage(null);
   };
 
+  const handleAddNewProduct = () => {
+    setEditingProduct({
+      id: '',
+      name: '',
+      description: '',
+      price: 0,
+      duration: '1 Year',
+      features: [],
+      active: true,
+      created_at: '',
+      updated_at: ''
+    });
+    setNewFeatureText('');
+    setSaveMessage(null);
+  };
+
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
 
     setSaveLoading(true);
     try {
-      const res = await productService.updateProduct(editingProduct);
-      if (res.success) {
-        setProducts(prev => prev.map(p => p.id === editingProduct.id ? editingProduct : p));
-        setSaveMessage('Product updated successfully!');
-        setTimeout(() => {
-          setEditingProduct(null);
-          setSaveMessage(null);
-        }, 1200);
+      if (editingProduct.id === '') {
+        const { id, created_at, updated_at, ...newProductData } = editingProduct;
+        const res = await productService.createProduct(newProductData);
+        if (res.success && res.data) {
+          setProducts(prev => [...prev, res.data!]);
+          setSaveMessage('Product created successfully!');
+          setTimeout(() => {
+            setEditingProduct(null);
+            setSaveMessage(null);
+          }, 1200);
+        }
+      } else {
+        const res = await productService.updateProduct(editingProduct);
+        if (res.success) {
+          setProducts(prev => prev.map(p => p.id === editingProduct.id ? editingProduct : p));
+          setSaveMessage('Product updated successfully!');
+          setTimeout(() => {
+            setEditingProduct(null);
+            setSaveMessage(null);
+          }, 1200);
+        }
       }
     } catch (e) {
       console.error('Error saving product', e);
@@ -85,11 +114,20 @@ export const AdminProductsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Products & Pricing</h1>
-        <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-          Configure subscription plans, prices, durations, and feature list highlights.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Products & Pricing</h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Configure subscription plans, prices, durations, and feature list highlights.
+          </p>
+        </div>
+        <button
+          onClick={handleAddNewProduct}
+          className="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold flex items-center justify-center gap-2 transition"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Add Product</span>
+        </button>
       </div>
 
       {loading ? (
@@ -157,7 +195,9 @@ export const AdminProductsPage: React.FC = () => {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl my-8">
             <div className="flex items-center justify-between pb-4 border-b border-zinc-800 mb-5">
-              <h2 className="font-bold text-white text-base">Edit {editingProduct.name}</h2>
+              <h2 className="font-bold text-white text-base">
+                {editingProduct.id === '' ? 'Add New Product' : `Edit ${editingProduct.name}`}
+              </h2>
               <button
                 onClick={() => setEditingProduct(null)}
                 className="p-1 rounded-lg text-zinc-400 hover:text-white"
