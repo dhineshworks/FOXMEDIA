@@ -46,6 +46,7 @@ export const AdminProductsPage: React.FC = () => {
   const handleAddNewProduct = () => {
     setEditingProduct({
       id: '',
+      slug: '',
       name: '',
       description: '',
       price: 0,
