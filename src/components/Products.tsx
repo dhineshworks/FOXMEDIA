@@ -31,6 +31,7 @@ export const Products: React.FC<ProductsProps> = ({ products, settings }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
           {products.map((product) => {
             const isAdobe = product.name.toLowerCase().includes('adobe');
+            const isCanva = product.name.toLowerCase().includes('canva');
             const message = getProductWhatsAppMessage(product.name, product.duration, product.price);
             const whatsappUrl = getWhatsAppUrl(settings.whatsapp_number, message);
 
@@ -74,9 +75,18 @@ export const Products: React.FC<ProductsProps> = ({ products, settings }) => {
                     </span>
                   </div>
 
-                  <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-white mt-4 tracking-tight">
-                    {product.name}
-                  </h3>
+                  <div className="flex items-center gap-3 mt-4">
+                    {(isAdobe || isCanva) && (
+                      <img
+                        src={isAdobe ? "/adobe-logo.png" : "/canva-logo.png"}
+                        alt={isAdobe ? "Adobe Logo" : "Canva Logo"}
+                        className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-md"
+                      />
+                    )}
+                    <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                      {product.name}
+                    </h3>
+                  </div>
                   <p className="text-sm text-zinc-400 mt-2 min-h-[40px] leading-relaxed">
                     {product.description}
                   </p>
